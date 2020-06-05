@@ -1,3 +1,3 @@
 # code-snippets
 
-bulk insert from shell to elastic search
+bulk_insert_shellToElastic.sh  -->  bulk insert from shell to elastic search
