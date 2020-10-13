@@ -1,0 +1,12 @@
+val df=Seq(("a","1"),("a","3")).toDF("ruleid","value")
+val df1=df.withColumn("mapd",lit(map(lit("a"),lit("value > 2")))).withColumn("value",$"value".cast("int")).withColumn("output",map_values($"mapd")(0))
+
+val evalString=spark.udf.register("evalString",(exp: String, num: String)=>{
+  import scala.reflect.runtime.currentMirror
+  import scala.tools.reflect.ToolBox
+  val toolbox = currentMirror.mkToolBox()
+  val compe = toolbox.eval(toolbox.parse(exp.replace("value",num))).toString.toBoolean
+  compe
+})
+
+df1.withColumn("res",evalString($"output",$"value")).show
